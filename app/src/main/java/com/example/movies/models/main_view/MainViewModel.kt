@@ -1,15 +1,15 @@
-package com.example.movies
+package com.example.movies.models.main_view
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.movies.api.ApiFactory
 import com.example.movies.pojo.Movie
-import com.example.movies.pojo.MovieResponse
+import com.example.movies.pojo.trailers.Trailer
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 
 
-private const val TAG = "My Exception Handler"
+private const val TAG = "MainViewModel"
 private const val NOT_NULL_FIELD = "videos.trailers.url"
 
 //const val TOKEN = "6S4AVWD-MQ8M2RM-J4PDSQ5-YH8G3KW"
@@ -33,8 +33,8 @@ class MainViewModel(application: Application, page: Int) : AndroidViewModel(appl
 //        Log.d("page", "constructor, page: ${page}")
 //        this.page = page
 //    }
-    var movies: MutableLiveData<List<Movie>> = MutableLiveData()
-    var isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    private var movies: MutableLiveData<List<Movie>> = MutableLiveData()
+    private var isLoading: MutableLiveData<Boolean> = MutableLiveData()
     private var page = 1
 
     private val compositeDisposable = CompositeDisposable()
@@ -42,7 +42,11 @@ class MainViewModel(application: Application, page: Int) : AndroidViewModel(appl
     init {
         loadMovies()
         this.page = page
-        Log.d("page", "init block")
+        //Log.d(TAG, "init")
+    }
+
+    fun getMovies(): LiveData<List<Movie>> {
+        return movies
     }
 
 
@@ -56,6 +60,7 @@ class MainViewModel(application: Application, page: Int) : AndroidViewModel(appl
             Log.d("page", "compositeDisposable.add page: ${page}")
             //Log.d("page", "this hash: ${this.hashCode()}")
             compositeDisposable.add(ApiFactory.apiService.loadMovies(TOKEN, page.toString(), NOT_NULL_FIELD)
+            //compositeDisposable.add(ApiFactory.apiService.loadMovies()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -96,7 +101,7 @@ class MainViewModel(application: Application, page: Int) : AndroidViewModel(appl
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("page", "onCleared")
+        Log.d(TAG, "onCleared")
         compositeDisposable.dispose()
     }
 }

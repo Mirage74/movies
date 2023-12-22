@@ -1,4 +1,4 @@
-package com.example.movies
+package com.example.movies.models.detail_view
 
 import android.app.Application
 import android.util.Log
@@ -6,10 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.movies.api.ApiFactory
+import com.example.movies.models.main_view.TOKEN
 import com.example.movies.pojo.trailers.Trailer
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,10 +18,13 @@ import kotlinx.coroutines.launch
 private const val TAG = "MovieDetailViewModel"
 
 class MovieDetailViewModel(application: Application) : AndroidViewModel(application) {
+
     private var trailers: MutableLiveData<List<Trailer>> = MutableLiveData()
+
     private val compositeDisposable = CompositeDisposable()
 
     fun getTrailers(): LiveData<List<Trailer>> {
+        Log.d(TAG, "getTrailers")
         return trailers
     }
 
@@ -32,7 +35,7 @@ class MovieDetailViewModel(application: Application) : AndroidViewModel(applicat
                     //compositeDisposable.add(ApiFactory.apiService.loadTrailers("626", TOKEN)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .map {it.trailersList.trailers }
+                    .map { it.trailersList.trailers }
                     .subscribe({
                         trailers.value = it
 
@@ -44,7 +47,7 @@ class MovieDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("page", "onCleared")
+        //Log.d(TAG, "onCleared")
         compositeDisposable.dispose()
     }
 }

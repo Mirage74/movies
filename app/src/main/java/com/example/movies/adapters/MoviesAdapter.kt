@@ -1,4 +1,4 @@
-package com.example.movies
+package com.example.movies.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.movies.R
 import com.example.movies.databinding.MovieItemBinding
 import com.example.movies.pojo.Movie
 
@@ -24,6 +25,7 @@ class MoviesAdapter : ListAdapter<Movie, MoviesAdapter.Holder>(Comparator()) {
 
     fun setMovies(movies: List<Movie>) {
         this.movies = movies
+        this.submitList(movies)
         notifyDataSetChanged()
     }
 

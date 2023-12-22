@@ -7,8 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.movies.adapters.MoviesAdapter
+import com.example.movies.adapters.TrailersAdapter
 import com.example.movies.databinding.ActivityMovieDetailBinding
+import com.example.movies.models.detail_view.ModelDetailFactory
+import com.example.movies.models.detail_view.MovieDetailViewModel
 import com.example.movies.pojo.Movie
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
@@ -19,11 +25,15 @@ private val compositeDisposable = CompositeDisposable()
 class MovieDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMovieDetailBinding
     private lateinit var viewModel: MovieDetailViewModel
+    private val trailersAdapter = TrailersAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_detail)
         viewModel = ViewModelProvider(this, ModelDetailFactory(application))[MovieDetailViewModel::class.java]
+        binding.recyclerViewTrailers.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewTrailers.adapter = trailersAdapter
+
         val movie = intent.getSerializableExtra(EXTRA_MOVIE, Movie::class.java)
 
         with(binding) {
@@ -37,7 +47,9 @@ class MovieDetailActivity : AppCompatActivity() {
 
                 viewModel.loadTrailers(movie.id)
                 viewModel.getTrailers().observe(this@MovieDetailActivity) {
-                    Log.d(TAG, "trailers: + ${it.toString()}")                }
+                    trailersAdapter.setTrailers(it)
+                    Log.d(TAG, "trailers: + ${it.toString()}")
+                }
 
             }
         }

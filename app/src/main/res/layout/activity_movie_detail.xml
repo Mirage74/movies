@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -37,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="@string/_1998"
-                android:textSize="16sp"
                 android:textColor="@android:color/holo_orange_light"
+                android:textSize="16sp"
                 app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
 
             <TextView
@@ -50,6 +50,15 @@
                 android:textSize="16sp"
                 app:layout_constraintTop_toBottomOf="@id/textViewYear" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTrailers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/textViewDescription"
+                tools:listitem="@layout/trailer_item" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>
