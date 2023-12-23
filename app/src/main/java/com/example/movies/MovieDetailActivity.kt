@@ -2,6 +2,7 @@ package com.example.movies
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +17,9 @@ import com.example.movies.databinding.ActivityMovieDetailBinding
 import com.example.movies.models.detail_view.ModelDetailFactory
 import com.example.movies.models.detail_view.MovieDetailViewModel
 import com.example.movies.pojo.Movie
+import com.example.movies.pojo.trailers.Trailer
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import java.net.URI
 
 private const val EXTRA_MOVIE = "movie"
 private const val TAG = "MovieDetailActivity"
@@ -51,6 +54,15 @@ class MovieDetailActivity : AppCompatActivity() {
                     Log.d(TAG, "trailers: + ${it.toString()}")
                 }
 
+                trailersAdapter.setOnCardClickListener(object : TrailersAdapter.OnCardClickListener {
+                    override fun onCardClick(trailer: Trailer) {
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.data = Uri.parse(trailer.url)
+                        startActivity(intent)
+                        //Log.d(TAG, "trailer's show was clicked")
+
+                    }
+                })
             }
         }
     }
