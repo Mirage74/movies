@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movies.R
 import com.example.movies.databinding.MovieItemBinding
-import com.example.movies.pojo.Movie
+import com.example.movies.pojo.movies.Movie
 
 
 class MoviesAdapter : ListAdapter<Movie, MoviesAdapter.Holder>(Comparator()) {

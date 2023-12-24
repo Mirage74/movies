@@ -10,7 +10,7 @@ import com.example.movies.adapters.MoviesAdapter
 import com.example.movies.databinding.ActivityMainBinding
 import com.example.movies.models.main_view.MainViewModel
 import com.example.movies.models.main_view.ModelFactory
-import com.example.movies.pojo.Movie
+import com.example.movies.pojo.movies.Movie
 
 
 //private const val TAG = "MainActivity"

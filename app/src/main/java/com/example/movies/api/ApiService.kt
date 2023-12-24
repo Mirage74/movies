@@ -1,6 +1,7 @@
 package com.example.movies.api
 
-import com.example.movies.pojo.MovieResponse
+import com.example.movies.pojo.movies.MovieResponse
+import com.example.movies.pojo.reviews.RewiesResponse
 import com.example.movies.pojo.trailers.TrailerResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
@@ -30,10 +31,21 @@ interface ApiService {
     ): Single<TrailerResponse>
 
 
+    @GET("review?selectFields=id&selectFields=type&selectFields=review&selectFields=author&sortField=date&sortType=-1&movieId=626")
+    fun loadReviws(
+        @Query(QUERY_PARAM_TOKEN) token: String,
+        @Query(QUERY_PARAM_LIMIT) limit: String,
+        @Query(QUERY_PARAM_PAGE) page: String,
+        @Query(QUERY_PARAM_MOVIE_ID) movieId: String
+    ): Single<RewiesResponse>
+
+
     companion object {
         private const val QUERY_PARAM_PAGE = "page"
         private const val QUERY_PARAM_TOKEN = "token"
         private const val QUERY_PARAM_NOT_NULL_FIELD = "notNullFields"
+        private const val QUERY_PARAM_LIMIT = "limit"
+        private const val QUERY_PARAM_MOVIE_ID = "movieId"
 
     }
 

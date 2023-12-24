@@ -1,4 +1,4 @@
-package com.example.movies.pojo
+package com.example.movies.pojo.movies
 
 import com.google.gson.annotations.SerializedName
 

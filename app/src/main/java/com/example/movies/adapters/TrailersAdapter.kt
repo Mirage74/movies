@@ -33,7 +33,7 @@ class TrailersAdapter: ListAdapter<Trailer, TrailersAdapter.Holder>(Comparator()
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val trailerInfo: Trailer = getItem(position)
-        holder.bind(trailerInfo, holder)
+        holder.bind(trailerInfo)
         holder.itemView.setOnClickListener {
             onCardClickListener.onCardClick(trailerInfo)
         }
@@ -41,7 +41,7 @@ class TrailersAdapter: ListAdapter<Trailer, TrailersAdapter.Holder>(Comparator()
 
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = TrailerItemBinding.bind(view)
-        fun bind(trailerInfo: Trailer, holder: Holder) = with(binding) {
+        fun bind(trailerInfo: Trailer) = with(binding) {
             textViewTrailerName.text = trailerInfo.name
         }
     }
