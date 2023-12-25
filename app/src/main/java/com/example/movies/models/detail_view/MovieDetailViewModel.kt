@@ -57,6 +57,7 @@ class MovieDetailViewModel(application: Application) : AndroidViewModel(applicat
             dbDAO.insertMovieToFavoriteDatabase(movie)
                 .subscribeOn(Schedulers.io())
                 .subscribe({
+
                     Log.d(TAG, "insertMovieToFav: + ${movie.name}")
                 }) {
                     Log.d(TAG, "fun insertMovieToFav .subscribe exception: + $it")
@@ -68,7 +69,7 @@ class MovieDetailViewModel(application: Application) : AndroidViewModel(applicat
         compositeDisposable.add(
             dbDAO.removeMovieFromFavoriteDatabase(movieId)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                //.observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.d(TAG, "removeMovieFromFav: + $movieId")
                 }) {

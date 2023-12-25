@@ -21,11 +21,12 @@ class MainActivity : ComponentActivity() {
     private val moviesAdapter = MoviesAdapter()
     //private var page = 1
 
-
-    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        val intent = FavouriteMoviesActivity.newIntent(this)
+        startActivity(intent)
         //viewModel = ViewModelProvider(this)[MainViewModel(application, 1)::class.java]
         viewModel = ViewModelProvider(this, ModelFactory(application, 1))[MainViewModel::class.java]
         binding.recyclerViewMovies.layoutManager = GridLayoutManager(this, 2)
@@ -33,9 +34,6 @@ class MainActivity : ComponentActivity() {
 
 
         viewModel.getMovies().observe(this) {
-            //Log.d(TAG,"viewModel.getMovies()  ${it.size}")
-            //Log.d(TAG,"viewModel. first id:   ${it[0].id}")
-            //moviesAdapter.submitList(it)
             moviesAdapter.setMovies(it)
         }
 
