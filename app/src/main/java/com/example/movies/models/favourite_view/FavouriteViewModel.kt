@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.example.movies.database.MovieDatabase
 import com.example.movies.pojo.movies.Movie
@@ -12,6 +13,9 @@ private const val TAG = "FavouriteViewModel"
 private const val DB_NAME = "movie.db"
 
 class FavouriteViewModel(application: Application) : AndroidViewModel(application) {
+
+    var FavMoviesList = getAllFavoriteMovies()
+
 
     private val moviesDatabase = Room.databaseBuilder(
         application,
@@ -22,7 +26,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
     private val dbDAO = moviesDatabase.moviesDao()
 
     fun getAllFavoriteMovies(): LiveData<List<Movie>> {
-        Log.d(TAG, "getFavoriteMovie")
+        //Log.d(TAG, "getFavoriteMovie")
         return dbDAO.getAllFavoriteMovies()
     }
 

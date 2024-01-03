@@ -1,33 +1,29 @@
 package com.example.movies.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.movies.R
-import com.example.movies.databinding.MovieItemBinding
 import com.example.movies.pojo.movies.Movie
 
 
+private val TAG = "MoviesAdapter"
+
 class MoviesAdapter : ListAdapter<Movie, MoviesAdapter.Holder>(Comparator()) {
 
-    private lateinit var onCardClickListener: OnCardClickListener
+    var onCardClickListener: ((Movie) -> Unit)? = null
+
     private lateinit var movies: List<Movie>
     private lateinit var onReachEndListener: OnReachEndListener
 
-    fun setOnCardClickListener(onCardClickListener: OnCardClickListener) {
-        this.onCardClickListener = onCardClickListener
-    }
-
-    fun setMovies(movies: List<Movie>) {
-        this.movies = movies
-        this.submitList(movies)
-        notifyDataSetChanged()
-    }
 
     fun setOnReachEndListener(onReachEndListener: OnReachEndListener) {
         this.onReachEndListener = onReachEndListener
@@ -39,27 +35,15 @@ class MoviesAdapter : ListAdapter<Movie, MoviesAdapter.Holder>(Comparator()) {
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        val movieInfo: Movie = getItem(position)
-        //Log.d("onBindViewHolder", "position: ${position}")
-        holder.bind(movieInfo, holder)
-        holder.itemView.setOnClickListener {
-            onCardClickListener.onCardClick(movieInfo)
+        val movieInfo = getItem(position)
+        holder.view.setOnClickListener {
+            onCardClickListener?.invoke(movieInfo)
         }
-        //Log.d("onBindViewHolder","position ${position}")
-        //Log.d("onBindViewHolder","this.currentList.size minus odin ${this.currentList.size - 1}")
 
 
-        //if (position == this.currentList.size - 1) {
-        if (position >= this.currentList.size - 10) {
-            onReachEndListener.onReachEnd()
-        }
-    }
-
-
-    class Holder(view: View) : RecyclerView.ViewHolder(view) {
-        private val binding = MovieItemBinding.bind(view)
-        fun bind(movieInfo: Movie, holder: Holder) = with(binding) {
-            val movieRating = movieInfo.rating.kp.toDouble()
+        val movieRating = movieInfo.rating.kp.toDouble()
+        with(holder) {
+            textViewRating.text = movieInfo.rating.kp
             textViewRating.text =
                 movieInfo.rating.kp.substring(0, movieInfo.rating.kp.indexOf('.') + 2)
             if (movieRating > 7) {
@@ -72,12 +56,20 @@ class MoviesAdapter : ListAdapter<Movie, MoviesAdapter.Holder>(Comparator()) {
                 textViewRating.background =
                     ContextCompat.getDrawable(holder.itemView.context, R.drawable.circle_red)
             }
-            //Picasso.get().load(movieInfo.poster.url).into(imageViewPoster)
             Glide.with(holder.itemView)
                 .load(movieInfo.poster.url)
                 .into(imageViewPoster)
-
         }
+        if (position >= this.currentList.size - 10) {
+            onReachEndListener.onReachEnd()
+        }
+    }
+
+
+    class Holder(val view: View) : RecyclerView.ViewHolder(view) {
+        val textViewRating = view.findViewById<TextView>(R.id.textViewRating)
+        val imageViewPoster = view.findViewById<ImageView>(R.id.imageViewPoster)
+
     }
 
     class Comparator : DiffUtil.ItemCallback<Movie>() {
@@ -94,8 +86,5 @@ class MoviesAdapter : ListAdapter<Movie, MoviesAdapter.Holder>(Comparator()) {
         fun onReachEnd()
     }
 
-    interface OnCardClickListener {
-        fun onCardClick(movie: Movie)
-    }
 
 }

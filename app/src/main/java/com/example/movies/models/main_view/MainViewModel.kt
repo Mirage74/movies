@@ -3,7 +3,6 @@ package com.example.movies.models.main_view
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.movies.api.ApiFactory
 import com.example.movies.pojo.movies.Movie
@@ -32,7 +31,7 @@ class MainViewModel(application: Application, page: Int) : AndroidViewModel(appl
 //        Log.d("page", "constructor, page: ${page}")
 //        this.page = page
 //    }
-    private var movies: MutableLiveData<List<Movie>> = MutableLiveData()
+    var moviesList: MutableLiveData<List<Movie>> = MutableLiveData()
     private var isLoading: MutableLiveData<Boolean> = MutableLiveData()
     private var page = 1
 
@@ -44,9 +43,9 @@ class MainViewModel(application: Application, page: Int) : AndroidViewModel(appl
         //Log.d(TAG, "init")
     }
 
-    fun getMovies(): LiveData<List<Movie>> {
-        return movies
-    }
+//    fun getMovies(): LiveData<List<Movie>> {
+//        return movies
+//    }
 
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -70,15 +69,15 @@ class MainViewModel(application: Application, page: Int) : AndroidViewModel(appl
                 .doAfterTerminate { isLoading.value = false }
                 .subscribe({
                     isLoading.value = true
-                    if (movies.value != null) {
-                        val loadedMovies: MutableList<Movie> = movies.value as MutableList<Movie>
+                    if (moviesList.value != null) {
+                        val loadedMovies: MutableList<Movie> = moviesList.value as MutableList<Movie>
                         loadedMovies.addAll(it.movies)
-                        movies.value = loadedMovies
+                        moviesList.value = loadedMovies
                         //Log.d("page", "getQquery page: ${page}")
                         //Log.d("page", "getQquery 0 id: ${it.movies[0].id}")
 
                     } else {
-                        movies.value = it.movies
+                        moviesList.value = it.movies
                         //refreshList()
 
                     }

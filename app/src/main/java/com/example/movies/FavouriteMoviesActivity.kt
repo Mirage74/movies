@@ -18,34 +18,42 @@ import com.example.movies.pojo.movies.Movie
 class FavouriteMoviesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavouriteMoviesBinding
     private lateinit var viewModel: FavouriteViewModel
-    private val moviesAdapter = MoviesAdapter()
+    private lateinit var moviesAdapter: MoviesAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_favourite_movies)
         viewModel = ViewModelProvider(this, ModelFavouriteFactory(application))[FavouriteViewModel::class.java]
+        setupRecyclerView()
+
         binding.recyclerViewFavourite.layoutManager = GridLayoutManager(this, 2)
-        binding.recyclerViewFavourite.adapter = moviesAdapter
 
 
-        viewModel.getAllFavoriteMovies().observe(this, Observer {
-            moviesAdapter.setMovies(it)
-        })
+        viewModel.FavMoviesList.observe(this) {
+            moviesAdapter.submitList(it)
+        }
 
-        moviesAdapter.setOnCardClickListener(object : MoviesAdapter.OnCardClickListener {
-            override fun onCardClick(movie: Movie) {
-                val intent = MovieDetailActivity.newIntent(this@FavouriteMoviesActivity, movie)
-                startActivity(intent)
 
-            }
-        })
 
         moviesAdapter.setOnReachEndListener(object : MoviesAdapter.OnReachEndListener {
             override fun onReachEnd() {
 
             }
         })
+    }
+
+    fun setupRecyclerView() {
+        moviesAdapter = MoviesAdapter()
+        binding.recyclerViewFavourite.adapter = moviesAdapter
+        setupClickListener()
+    }
+
+    private fun setupClickListener() {
+        moviesAdapter.onCardClickListener = {
+            val intent = MovieDetailActivity.newIntent(this@FavouriteMoviesActivity, it)
+            startActivity(intent)
+        }
     }
 
     companion object {

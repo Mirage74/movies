@@ -1,8 +1,9 @@
 package com.example.movies
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,10 +16,11 @@ import com.example.movies.pojo.movies.Movie
 
 //private const val TAG = "MainActivity"
 
-class MainActivity : ComponentActivity() {
+//class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-    private val moviesAdapter = MoviesAdapter()
+    private lateinit var moviesAdapter: MoviesAdapter
     //private var page = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,23 +29,18 @@ class MainActivity : ComponentActivity() {
 
         val intent = FavouriteMoviesActivity.newIntent(this)
         startActivity(intent)
-        //viewModel = ViewModelProvider(this)[MainViewModel(application, 1)::class.java]
         viewModel = ViewModelProvider(this, ModelFactory(application, 1))[MainViewModel::class.java]
+
+        setupRecyclerView()
+
         binding.recyclerViewMovies.layoutManager = GridLayoutManager(this, 2)
-        binding.recyclerViewMovies.adapter = moviesAdapter
 
 
-        viewModel.getMovies().observe(this) {
-            moviesAdapter.setMovies(it)
+
+
+        viewModel.moviesList.observe(this) {
+            moviesAdapter.submitList(it)
         }
-
-        moviesAdapter.setOnCardClickListener(object : MoviesAdapter.OnCardClickListener {
-            override fun onCardClick(movie: Movie) {
-                val intent = MovieDetailActivity.newIntent(this@MainActivity, movie)
-                startActivity(intent)
-
-            }
-        })
 
         moviesAdapter.setOnReachEndListener(object : MoviesAdapter.OnReachEndListener {
             override fun onReachEnd() {
@@ -53,6 +50,18 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    fun setupRecyclerView() {
+        moviesAdapter = MoviesAdapter()
+        binding.recyclerViewMovies.adapter = moviesAdapter
+        setupClickListener()
+    }
+
+    private fun setupClickListener() {
+        moviesAdapter.onCardClickListener = {
+            val intent = MovieDetailActivity.newIntent(this@MainActivity, it)
+            startActivity(intent)
+        }
+    }
 
 }
 
